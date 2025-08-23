@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+require "ccru"
+
+# CLI will be autoloaded when accessed
+exit Ccru::CLI.new.run(ARGV)
