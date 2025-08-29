@@ -30,6 +30,7 @@ module Ccru
 
       result = run_rubocop_and_parse(path, content)
       return result unless result.is_a?(Array)
+      return 0 if result.empty?
 
       offenses = filter_offenses_by_lines(result, meta[:lines])
       return 0 if offenses.empty?

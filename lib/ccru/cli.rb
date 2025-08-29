@@ -3,8 +3,6 @@
 require_relative "git_diff"
 require_relative "linter_runner"
 
-require "pry"
-
 module Ccru
   # Command-line interface for ccru
   class CLI

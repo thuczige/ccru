@@ -2,8 +2,6 @@
 
 require_relative "usual_linter"
 
-require "pry"
-
 module Ccru
   # JavaScript linter that checks for ES6+ syntax violations and basic code quality
   class JavaScriptLinter
