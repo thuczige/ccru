@@ -6,3 +6,5 @@ source "https://rubygems.org"
 gemspec
 
 gem "pry", "0.15.2"
+
+gem "rake", "13.3"
