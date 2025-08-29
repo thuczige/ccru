@@ -17,7 +17,8 @@ module Ccru
       return 0 unless content
 
       result = run_rubocop_and_parse(path, content)
-      return 0 if result.is_a?(Array) && result.empty?
+      return result unless result.is_a?(Array)
+      return 0 if result.empty?
 
       print_offenses(path, result)
       1
