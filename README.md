@@ -15,10 +15,14 @@ end
 ### Basic Usage
 
 ```bash
+# Commit your code
+git add some_files
+git commit -m "commit message"
+
 # Check changed Ruby, JavaScript, and ERB files in git diff (compared to merge-base)
 bundle exec ccru
 
-# Check specific files
+# Check specific files (No need commit)
 bundle exec ccru path/to/file.rb path/to/script.js path/to/template.erb
 ```
 
