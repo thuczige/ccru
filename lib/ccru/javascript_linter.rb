@@ -173,6 +173,21 @@ module Ccru
       @offenses
     end
 
+    def lint_code(content, path, changed_lines)
+      @current_code = content.lines
+      
+      changed_lines.each do |line_number|
+        line_content = content.lines[line_number - 1]
+        next unless line_content
+
+        check_final_newline_for_line(line_content, line_number)
+        check_js_conventions_for_line(line_content, line_number)
+        check_trailing_whitespace_for_line(line_content, line_number)
+      end
+
+      { status: @offenses.empty? ? 0 : 1, offenses: @offenses }
+    end
+
     def check_js_conventions(content)
       @current_code = content.lines
 
@@ -185,6 +200,35 @@ module Ccru
 
         check_line_conventions(line_content, line_number)
       end
+    end
+
+    def check_js_conventions_for_line(line_content, line_number)
+      return if line_content.strip.empty?
+      return if commment?(line_content, line_number)
+
+      check_line_conventions(line_content, line_number)
+    end
+
+    def check_final_newline_for_line(line_content, line_number)
+      # Only check the last line for final newline
+      return unless line_number == @current_code.length
+      return if line_content.end_with?("\n")
+
+      add_offense(:missing_final_newline, {
+        message: "File should end with a newline",
+        cop_name: "MissingFinalNewline",
+        severity: "warning"
+      }, line_content, line_number)
+    end
+
+    def check_trailing_whitespace_for_line(line_content, line_number)
+      return unless line_content.match(/\s+$/)
+
+      add_offense(:trailing_whitespace, {
+        message: "Trailing whitespace detected",
+        cop_name: "TrailingWhitespace",
+        severity: "warning"
+      }, line_content, line_number)
     end
 
     # rubocop:disable Metrics

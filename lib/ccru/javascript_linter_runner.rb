@@ -26,6 +26,10 @@ module Ccru
 
       linter = JavaScriptLinter.new
       result = linter.lint_code(content, path, meta[:lines])
+      
+      return result[:status] if result[:offenses].empty?
+      
+      print_offenses(path, result[:offenses])
       result[:status]
     end
   end
