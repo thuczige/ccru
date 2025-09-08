@@ -214,7 +214,8 @@ module Ccru
         next if line_content.match(rule[:pattern]).nil?
         next if rule_name == :missing_semicolon && no_need_semicolon?(line_content)
         next if rule_name == :unused_variables && used_variable?(line_content, line_number)
-        next if rule_name == :loose_equality && line_content.include?("!==")
+        next if rule_name == :loose_equality && (line_content.include?("===") || line_content.include?("!=="))
+        next if rule_name == :loose_inequality && line_content.include?("!==")
 
         add_offense(rule_name, rule, line_content, line_number)
         break
@@ -274,7 +275,47 @@ module Ccru
       # but JS ASI will handle it, I consider it unnecessary
       return true if line.match(/^(return|break|continue|throw)\b/)
 
+      # Object/array literal properties and elements don't need semicolons
+      return true if in_object_or_array_literal?(line_content)
+
       false
+    end
+
+    def in_object_or_array_literal?(line_content)
+      return false unless @current_code
+
+      line_number = @current_code.index(line_content) + 1
+      return false unless line_number
+
+      # Check if we're inside an object or array literal
+      brace_count = 0
+      bracket_count = 0
+      in_object = false
+      in_array = false
+
+      @current_code.each_with_index do |code_line, index|
+        break if index >= line_number
+
+        # Check for braces and brackets
+        code_line.each_char do |char|
+          case char
+          when "{"
+            brace_count += 1
+            in_object = true if brace_count == 1
+          when "}"
+            brace_count -= 1
+            in_object = false if brace_count.zero?
+          when "["
+            bracket_count += 1
+            in_array = true if bracket_count == 1
+          when "]"
+            bracket_count -= 1
+            in_array = false if bracket_count.zero?
+          end
+        end
+      end
+
+      in_object || in_array
     end
     # rubocop:enable Metrics
 
