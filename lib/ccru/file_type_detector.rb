@@ -5,6 +5,7 @@ module Ccru
   module FileTypeDetector
     SUPPORTED_EXTENSIONS = {
       ".rb" => :ruby,
+      ".rake" => :ruby,
       ".js" => :javascript,
       ".erb" => :erb
     }.freeze
