@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ccru (0.1.4)
+    ccru (0.1.6)
       rubocop (>= 0.5, < 2.0)
 
 GEM
